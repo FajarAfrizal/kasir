@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\PelangganController;
+use App\Http\Controllers\PenjualanController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProdukController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,3 +26,9 @@ Route::post('/login', [Controller::class, 'authLogin'])->name('authLogin');
 
 Route::get('/pelanggan', [PelangganController::class, 'index'])->name('pelanggan');
 Route::post('/pelanggan/add', [PelangganController::class, 'store'])->name('createPelanggan');
+
+Route::get('/produk', [ProdukController::class, 'index'])->name('Produk');
+Route::post('/produk/add', [ProdukController::class, 'store'])->name('createProduk');
+
+Route::get('/buy/produk/{produkId}', [PenjualanController::class, 'buyying'])->name('buy');
+Route::post('/buying/produk', [PenjualanController::class, 'store'])->name('buyying');

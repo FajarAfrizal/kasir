@@ -12,7 +12,9 @@ class PelangganController extends Controller
      */
     public function index()
     {
-        return view('pelanggan.index');
+        $pelanggan = pelanggan::all();
+        
+        return view('pelanggan.index', compact('pelanggan'));
     }
 
     /**
@@ -26,7 +28,7 @@ class PelangganController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+        public function store(Request $request)
     {
         $request->validate([
             'namaPelanggan' => 'required|string',

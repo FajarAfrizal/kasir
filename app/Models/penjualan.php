@@ -11,4 +11,9 @@ class penjualan extends Model
 
     protected $table = 'penjualan';
     protected $guarded = ['id'];
+
+    public function pelanggan()
+    {
+        return $this->belongsTo(pelanggan::class, 'pelanggan_id');
+    }
 }

@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\detailPenjualan;
+use App\Models\pelanggan;
 use App\Models\penjualan;
+use App\Models\Produk;
+use DateTime;
 use Illuminate\Http\Request;
 
 class PenjualanController extends Controller
@@ -11,11 +14,18 @@ class PenjualanController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function buyying($produkId)
     {
-        //
+        $produk = Produk::where('id','=', $produkId)->first();
+        $pelanggan = pelanggan::all();
+        return view('produk.buyying', compact('produk', 'pelanggan'));
     }
 
+
+    public function index()
+    {
+        
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -29,27 +39,26 @@ class PenjualanController extends Controller
      */
     public function store(Request $request)
     {
-        $penjualan = Penjualan::create([
-            'tanggalPenjualan' => now(),
-            'penlanggan_id' => $request->pelanggan_id,
-        ]);
-        
-        // Menghitung total harga produk
-        $totalHarga = $request->jumlahProduk * $request->hargaProduk; // Pastikan harga produk telah disediakan dalam permintaan Anda
-        
-        // Membuat entri detail penjualan dengan penjualan_id yang baru dibuat dan total harga produk
-        $detailPenjualan = DetailPenjualan::create([
-            'penjualan_id' => $penjualan->id, // Menggunakan ID penjualan yang baru dibuat
-            'product_id' => $request->product_id,
-            'jumlahProduk' => $request->jumlahProduk,
-            'subtotal' => $totalHarga,
-        ]);
-        
-        // Mengupdate total harga di entri penjualan
-        $penjualan->update([
-            'totalHarga' => $penjualan->totalHarga + $totalHarga // Menambahkan subtotal ke totalHarga
-        ]);      
 
+        $penjualan = Penjualan::create([
+            'tanggalPenjulan' => now(),
+            'pelanggan_id' => $request->pelanggan_id,
+            'totalHarga' => $request->totalHarga
+        ]);
+        
+
+        DetailPenjualan::create([
+            'penjualan_id' => $penjualan->id, 
+            'produk_id' => $request->produk_id,
+            'jumlahProduk' => $request->jumlahProduk,
+            'subtotal' => $penjualan->totalHarga
+        ]);
+
+        $product = Produk::findOrFail($request->produk_id);
+             
+        $product->decrement('stock', $request->jumlahProduk);
+
+        return redirect()->back();
     }
 
     /**

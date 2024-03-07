@@ -12,7 +12,8 @@ class ProdukController extends Controller
      */
     public function index()
     {
-        //
+        $produk = Produk::all();
+        return view('produk.index', compact('produk'));
     }
 
     /**
@@ -28,7 +29,19 @@ class ProdukController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'namaProduk' => 'required|string',
+            'harga' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+        ]);
+        
+        Produk::create([
+            'namaProduk' => $request->namaProduk,
+            'harga' => $request->harga,
+            'stock' => $request->stock,
+        ]);
+
+        return redirect()->back();
     }
 
     /**
